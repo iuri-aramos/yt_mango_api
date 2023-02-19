@@ -5,15 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "standard --fix"
+    "format": "standard --fix",
+    "prepare": "husky install"
   },
   "lint-staged": {
-    "*.js": ["standard --fix"]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+    "*.js": [
+      "standard --fix"
+    ]
   },
   "repository": {
     "type": "git",

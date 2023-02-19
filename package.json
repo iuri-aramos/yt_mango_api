@@ -1,0 +1,23 @@
+{
+  "name": "yt_mango_api",
+  "version": "1.0.0",
+  "description": "Mango course from youtube to build an api rest with clean code",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iuri-aramos/yt_mango_api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/iuri-aramos/yt_mango_api/issues"
+  },
+  "homepage": "https://github.com/iuri-aramos/yt_mango_api#readme",
+  "devDependencies": {
+    "standard": "^17.0.0"
+  }
+}

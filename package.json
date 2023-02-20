@@ -8,6 +8,9 @@
     "format": "standard --fix",
     "prepare": "husky install"
   },
+  "standard": {
+    "env": ["jest"]
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/iuri-aramos/yt_mango_api.git"

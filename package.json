@@ -4,7 +4,8 @@
   "description": "Mango course from youtube to build an api rest with clean code",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --watch",
+    "test:staged": "jest",
     "format": "standard --fix",
     "prepare": "husky install"
   },

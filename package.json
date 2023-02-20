@@ -8,12 +8,6 @@
     "format": "standard --fix",
     "prepare": "husky install"
   },
-  "lint-staged": {
-    "*.js": [
-      "standard --fix",
-      "git add"
-    ]
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/iuri-aramos/yt_mango_api.git"

@@ -1,10 +1,18 @@
 import MissingParamError from './missing-param-error.js'
+import UnauthorizedError from './unauthorized-error.js'
 
 class HttpResponse {
-  static badRequest (param) {
+  static badRequestError (param) {
     return {
       statusCode: 400,
       body: new MissingParamError(param)
+    }
+  }
+
+  static unathorizedError (param) {
+    return {
+      statusCode: 401,
+      body: new UnauthorizedError()
     }
   }
 

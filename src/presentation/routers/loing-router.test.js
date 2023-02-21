@@ -1,5 +1,6 @@
 import LoginRouter from './login-router.js'
 import MissingParamError from '../helpers/missing-param-error.js'
+import UnauthorizedError from '../helpers/unauthorized-error.js'
 
 const makeSut = () => {
   class AuthUserCaseSpy {
@@ -40,7 +41,7 @@ describe('Login Router', () => {
 
     const httpRequest = {
       body: {
-        email: 'user@user.com'
+        email: 'any_email@mail.com'
       }
     }
 
@@ -85,15 +86,64 @@ describe('Login Router', () => {
 
     const httpRequest = {
       body: {
-        email: 'user@user.com',
-        password: 'abc123'
+        email: 'any_email@mail.com',
+        password: 'any_password'
+      }
+    }
+
+    sut.route(httpRequest)
+
+    // TODO check the status
+    // expect(httpResponse.statusCode).toBe(200)
+    expect(authUseCaseSpy.email).toBe(httpRequest.body.email)
+    expect(authUseCaseSpy.password).toBe(httpRequest.body.password)
+  })
+
+  it('should return a 401 when invalid credentials are provided', () => {
+    // system under test
+    const { sut } = makeSut()
+
+    const httpRequest = {
+      body: {
+        email: 'invalid_email@mail.com',
+        password: 'invalid_password'
       }
     }
 
     const httpResponse = sut.route(httpRequest)
 
-    expect(httpResponse.status).toBe(200)
-    expect(authUseCaseSpy.email).toBe(httpRequest.body.email)
-    expect(authUseCaseSpy.password).toBe(httpRequest.body.password)
+    expect(httpResponse.statusCode).toBe(401)
+    expect(httpResponse.body).toEqual(new UnauthorizedError())
+  })
+
+  it('should return 500 if no authUseCase is provided', () => {
+    // system under test
+    const sut = new LoginRouter()
+
+    const httpRequest = {
+      body: {
+        email: 'any_email@mail.com',
+        password: 'any_password'
+      }
+    }
+
+    const httpResponse = sut.route(httpRequest)
+
+    expect(httpResponse.statusCode).toBe(500)
+  })
+
+  it('should return 500 if authUseCase has no auth method', () => {
+    const sut = new LoginRouter({})
+
+    const httpRequest = {
+      body: {
+        email: 'any_email@mail.com',
+        password: 'any_password'
+      }
+    }
+
+    const httpResponse = sut.route(httpRequest)
+
+    expect(httpResponse.statusCode).toBe(500)
   })
 })

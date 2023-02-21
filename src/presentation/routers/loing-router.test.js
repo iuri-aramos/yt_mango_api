@@ -2,12 +2,25 @@ import LoginRouter from './login-router.js'
 import MissingParamError from '../helpers/missing-param-error.js'
 
 const makeSut = () => {
-  return new LoginRouter()
+  class AuthUserCaseSpy {
+    auth (email, password) {
+      this.email = email
+      this.password = password
+    }
+  }
+
+  const authUseCaseSpy = new AuthUserCaseSpy()
+  const sut = new LoginRouter(authUseCaseSpy)
+
+  return {
+    sut,
+    authUseCaseSpy
+  }
 }
 describe('Login Router', () => {
   it('should return 400 if no email is provided', () => {
     // system under test
-    const sut = makeSut()
+    const { sut } = makeSut()
 
     const httpRequest = {
       body: {
@@ -23,7 +36,7 @@ describe('Login Router', () => {
 
   it('should return 400 if no password is provided', () => {
     // system under test
-    const sut = makeSut()
+    const { sut } = makeSut()
 
     const httpRequest = {
       body: {
@@ -38,7 +51,7 @@ describe('Login Router', () => {
 
   it('should return 500 if no httpRequest is provided', () => {
     // system under test
-    const sut = makeSut()
+    const { sut } = makeSut()
 
     const httpResponse = sut.route(null)
     expect(httpResponse.statusCode).toBe(500)
@@ -46,7 +59,7 @@ describe('Login Router', () => {
 
   it('should return 500 if httpRequest has no body', () => {
     // system under test
-    const sut = makeSut()
+    const { sut } = makeSut()
 
     const httpRequest = { }
 
@@ -56,7 +69,7 @@ describe('Login Router', () => {
 
   it('should return 500 if httpRequest body is null', () => {
     // system under test
-    const sut = makeSut()
+    const { sut } = makeSut()
 
     const httpRequest = {
       body: null
@@ -68,13 +81,19 @@ describe('Login Router', () => {
 
   it('should call AuthUseCase with correct params', () => {
     // system under test
-    const sut = makeSut()
+    const { sut, authUseCaseSpy } = makeSut()
 
     const httpRequest = {
-      body: null
+      body: {
+        email: 'user@user.com',
+        password: 'abc123'
+      }
     }
 
     const httpResponse = sut.route(httpRequest)
-    expect(httpResponse.statusCode).toBe(500)
+
+    expect(httpResponse.status).toBe(200)
+    expect(authUseCaseSpy.email).toBe(httpRequest.body.email)
+    expect(authUseCaseSpy.password).toBe(httpRequest.body.password)
   })
 })

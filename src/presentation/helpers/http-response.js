@@ -21,6 +21,12 @@ class HttpResponse {
       statusCode: 500
     }
   }
+
+  static ok () {
+    return {
+      statusCode: 200
+    }
+  }
 }
 
 export default HttpResponse

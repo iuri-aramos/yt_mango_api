@@ -23,7 +23,17 @@ const makeSut = () => {
     authUseCaseSpy
   }
 }
-describe('Login Router', () => {
+
+const makeAuthUseCaseWithError = () => {
+  class AuthUserCaseSpy {
+    auth () {
+      throw new Error()
+    }
+  }
+
+  return new AuthUserCaseSpy()
+}
+describe('Login Router validate parameters', () => {
   it('should return 400 if no email is provided', () => {
     // system under test
     const { sut } = makeSut()
@@ -90,7 +100,9 @@ describe('Login Router', () => {
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError())
   })
+})
 
+describe('Login Router Auth Token', () => {
   it('should call AuthUseCase with correct params', () => {
     // system under test
     const { sut, authUseCaseSpy } = makeSut()
@@ -175,5 +187,20 @@ describe('Login Router', () => {
 
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError())
+  })
+
+  it('should return 500 if authUseCase throws an exception', () => {
+    const sut = new LoginRouter(makeAuthUseCaseWithError)
+
+    const httpRequest = {
+      body: {
+        email: 'any_email@mail.com',
+        password: 'any_password'
+      }
+    }
+
+    const httpResponse = sut.route(httpRequest)
+
+    expect(httpResponse.statusCode).toBe(500)
   })
 })
